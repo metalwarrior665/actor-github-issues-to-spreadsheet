@@ -1,9 +1,31 @@
-# My beautiful actor
+# Github issues to spreadsheet
 
-The `README.md` file contains a documentation what your actor does and how to use it,
-which is then displayed in the app or Apify Store. It's always a good
-idea to write a good `README.md`, in a few months not even you
-will remember all the details about the actor.
+This is an [Apify](https://apify.com/) [actor](https://apify.com/actors) that collects all open issues from the repositories you provide it and uploads them to your spreadsheet.
 
-You can use [Markdown](https://www.markdownguide.org/cheat-sheet)
-language for rich formatting.
+## Authentication & authorization
+The actor uses OAuth to allow you to authorize the changes to your spreadsheet. For more details, check the readme of **Google Sheets** ([lukaskrivka/google-sheets](https://apify.com/lukaskrivka/google-sheets)) actor which is used here under the hood.
+
+## Issues formatting
+Issues can be uploaded all into one sheet or each repository can be uploaded to a separate sheet (change by switching `oneSheetPerRepository` input option). In case of separate sheets, you need to manually create them with the same names as the repositories before running this. The uploaded issues have these columns (the numbers are used to sort it):
+- `0_repository`
+- `1_title`
+- `2_label1`
+- `3_label2`
+- `4_author`
+- `5_createdAt`
+- `6_updatedAt`
+- `7_comments`
+- `8_url`
+
+All uploaded issues overwrite the previously stored issues. So the content in the sheets always reflect the latest state of the issues. If you would like to get more columns, let me know in the issues of this actor :)
+
+## Input
+- `repositories` (Array(String)) From what repositories the issues will be collected
+- `spreadsheetId` (String) Id of the spreadsheet where you want to upload the issues
+- `oneSheetPerRepository` (Boolean) If true, each repository will be uploaded to a sheet with the same name as the repository. YOU NEED TO HAVE THE SHEETS ALREADY CREATED!!!
+- `googleOauthStore` (String) Key-value store where your Google OAuth tokens will be stored so you don't have to authorize every time again. By default it is `google-oauth-tokens`
+
+## Running locally and scheduling
+This actor can be run locally but you still need to have an Apify account and be logged in your [apify-cli]() session. That is because this actor calls **Google Sheets** (lukaskrivka/google-sheets) actor on the Apify platform. If you really want to run this locally without the usage of Apify at all, you will have to clone the [Google Sheets repo](https://github.com/metalwarrior665/actor-google-sheets) and then merge the code together somehow with this one.
+
+Usually, you would like to have this sheet up to date so I recommend using the [Apify scheduler](https://my.apify.com/schedules). You can set up any interval in the scheduler but it should be more than 1 minute so the Google and Github APIs are not overloaded.

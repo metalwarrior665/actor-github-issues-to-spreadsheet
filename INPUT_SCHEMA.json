@@ -1,0 +1,34 @@
+{
+    "title": "Spreadsheet import input",
+    "type": "object",
+    "schemaVersion": 1,
+    "required": ["repositories", "spreadsheetId"],
+    "properties": {
+        "repositories": {
+            "title": "Repositories",
+            "type": "array",
+            "description": "From what repositories the issues will be collected",
+            "editor": "stringList",
+            "prefill": ["apifytech/apify-js"]
+        },
+        "spreadsheetId": {
+            "title": "Spreadsheet id",
+            "type": "string",
+            "description": "Id of the spreadsheet where you want to upload the issues",
+            "editor": "textfield"
+        },
+        "oneSheetPerRepository": {
+            "title": "One sheet per one repository",
+            "type": "boolean",
+            "description": "If true, each repository will be uploaded to a sheet with the same name as the repository. YOU NEED TO HAVE THE SHEETS ALREADY CREATED!!!",
+            "default": false
+        },
+        "googleOauthStore": {
+            "title": "Google OAuth tokens store",
+            "type": "string",
+            "description": "Key-value store where your Google OAuth tokens will be stored so you don't have to authorize every time again. By default it is google-oauth-tokens",
+            "editor": "textfield",
+            "default": "google-oauth-tokens"
+        }
+    }
+}
