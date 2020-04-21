@@ -22,8 +22,7 @@ Apify.main(async () => {
         const issues = data.map((issue) => ({
             '0_reposotory': repository,
             '1_title': issue.title,
-            '2_label1': issue.labels[1] || null,
-            '3_label2': issue.labels[2] || null,
+            '2_label': issue.labels[1] ? issue.labels[1].name : null,
             '4_author': issue.user.login,
             '5_createdAt': issue.created_at,
             '6_updatedAt': issue.updated_at,
@@ -31,6 +30,7 @@ Apify.main(async () => {
             '8_url': issue.html_url,
         }));
         allIssues.push(...issues);
+        await Apify.utils.sleep(1000);
     }
 
     const spreadsheetInput = {
