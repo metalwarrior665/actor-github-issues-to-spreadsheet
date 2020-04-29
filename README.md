@@ -6,16 +6,16 @@ This is an [Apify](https://apify.com/) [actor](https://apify.com/actors) that co
 The actor uses OAuth to allow you to authorize the changes to your spreadsheet. For more details, check the readme of **Google Sheets** ([lukaskrivka/google-sheets](https://apify.com/lukaskrivka/google-sheets)) actor which is used here under the hood.
 
 ## Issues formatting
-Issues can be uploaded all into one sheet or each repository can be uploaded to a separate sheet (change by switching `oneSheetPerRepository` input option). In case of separate sheets, you need to manually create them with the same names as the repositories before running this. The uploaded issues have these columns (the numbers are used to sort it):
-- `0_repository`
-- `1_title`
-- `2_label1`
-- `3_label2`
-- `4_author`
-- `5_createdAt`
-- `6_updatedAt`
-- `7_comments`
-- `8_url`
+Issues can be uploaded all into one sheet or each repository can be uploaded to a separate sheet (change by switching `oneSheetPerRepository` input option). If the sheet doesn't exist, it is automatically created. The uploaded issues have these columns:
+- `repository`
+- `title`
+- `label1`
+- `label2`
+- `author`
+- `createdAt`
+- `updatedAt`
+- `comments`
+- `url`
 
 All uploaded issues overwrite the previously stored issues. So the content in the sheets always reflect the latest state of the issues. If you would like to get more columns, let me know in the issues of this actor :)
 

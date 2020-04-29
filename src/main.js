@@ -21,15 +21,15 @@ Apify.main(async () => {
         }
         const data = await githubCall(repository);
         const issues = data.map((issue) => ({
-            '0_repository': repository,
-            '1_title': issue.title,
-            '2_label1': issue.labels[1] ? issue.labels[1].name : null,
-            '3_label2': issue.labels[2] ? issue.labels[2].name : null,
-            '4_author': issue.user.login,
-            '5_createdAt': issue.created_at,
-            '6_updatedAt': issue.updated_at,
-            '7_comments': issue.comments,
-            '8_url': issue.html_url,
+            repository,
+            title: issue.title,
+            label1: issue.labels[1] ? issue.labels[1].name : null,
+            label2: issue.labels[2] ? issue.labels[2].name : null,
+            author: issue.user.login,
+            createdAt: issue.created_at,
+            updatedAt: issue.updated_at,
+            comments: issue.comments,
+            url: issue.html_url,
         }));
         if (oneSheetPerRepository) {
             allIssues.push({ repository, issues });
@@ -49,6 +49,7 @@ Apify.main(async () => {
                 rawData: issues,
                 tokensStore: googleOauthStore,
                 range: repository,
+                columnsOrder: ['repository', 'title', 'label1', 'label2', 'author', 'createdAt', 'updatedAt', 'comments', 'url'],
             };
             console.log('Uploading data to a sheet');
 
