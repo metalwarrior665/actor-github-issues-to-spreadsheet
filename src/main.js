@@ -21,7 +21,7 @@ Apify.main(async () => {
         }
         const data = await githubCall(repository);
         const issues = data.map((issue) => ({
-            repository,
+            repository: oneSheetPerRepository ? undefined : repository,
             title: issue.title,
             label1: issue.labels[1] ? issue.labels[1].name : null,
             label2: issue.labels[2] ? issue.labels[2].name : null,
@@ -49,7 +49,9 @@ Apify.main(async () => {
                 rawData: issues,
                 tokensStore: googleOauthStore,
                 range: repository,
-                columnsOrder: ['repository', 'title', 'label1', 'label2', 'author', 'createdAt', 'updatedAt', 'comments', 'url'],
+                columnsOrder: oneSheetPerRepository
+                    ? ['title', 'label1', 'label2', 'author', 'createdAt', 'updatedAt', 'comments', 'url']
+                    : ['repository', 'title', 'label1', 'label2', 'author', 'createdAt', 'updatedAt', 'comments', 'url'],
             };
             console.log('Uploading data to a sheet');
 

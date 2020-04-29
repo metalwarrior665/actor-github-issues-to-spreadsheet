@@ -7,7 +7,7 @@ The actor uses OAuth to allow you to authorize the changes to your spreadsheet. 
 
 ## Issues formatting
 Issues can be uploaded all into one sheet or each repository can be uploaded to a separate sheet (change by switching `oneSheetPerRepository` input option). If the sheet doesn't exist, it is automatically created. The uploaded issues have these columns:
-- `repository`
+- `repository`(skipped in `oneSheetPerRepository`)
 - `title`
 - `label1`
 - `label2`
