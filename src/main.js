@@ -12,9 +12,15 @@ Apify.main(async () => {
         spreadsheetId,
         repositories = [],
         googleOauthStore,
+        oneSheetForAllRepositories = true,
         oneSheetPerRepository = false,
     } = input;
 
+    if (!oneSheetForAllRepositories && !oneSheetPerRepository) {
+        throw new Error('WRONG INPUT! You need to pick at least one of oneSheetForAllRepositories and oneSheetPerRepository or both');
+    }
+
+    const issuesPerRepository = [];
     const allIssues = [];
     for (const repository of repositories) {
         if (!repository.split('/').length === 2) {
@@ -22,7 +28,7 @@ Apify.main(async () => {
         }
         const data = await githubCall(repository);
         const issues = data.map((issue) => ({
-            repository: oneSheetPerRepository ? undefined : repository,
+            repository,
             title: issue.title,
             label1: issue.labels[1] ? issue.labels[1].name : null,
             label2: issue.labels[2] ? issue.labels[2].name : null,
@@ -33,8 +39,9 @@ Apify.main(async () => {
             url: issue.html_url,
         }));
         if (oneSheetPerRepository) {
-            allIssues.push({ repository, issues });
-        } else {
+            issuesPerRepository.push({ repository, issues: issues.map((issue) => ({ ...issue, repository: undefined })) });
+        }
+        if (oneSheetForAllRepositories) {
             allIssues.push(...issues);
         }
         await Apify.utils.sleep(1000);
@@ -42,28 +49,30 @@ Apify.main(async () => {
 
     console.warn(`AUTHORIZATION REQUIRED --- For the first run, you will need to authorize
             Go to https://my.apify.com, click on the lukaskrivka/google-sheets run, list the latest run and authorize in the Live View tab`);
-    if (oneSheetPerRepository) {
-        for (const { repository, issues } of allIssues) {
-            const spreadsheetInput = {
-                spreadsheetId,
-                mode: 'replace',
-                rawData: issues,
-                tokensStore: googleOauthStore,
-                range: repository,
-                columnsOrder: utils.getColumnsOrder(oneSheetPerRepository),
-            };
-            console.log('Uploading data to a sheet');
 
-            await Apify.call('lukaskrivka/google-sheets', spreadsheetInput);
-            console.log('Data uploaded');
-        }
-    } else {
+    for (const { repository, issues } of issuesPerRepository) {
         const spreadsheetInput = {
+            spreadsheetId,
+            mode: 'replace',
+            rawData: issues,
+            tokensStore: googleOauthStore,
+            range: repository,
+            columnsOrder: utils.getColumnsOrder(true),
+        };
+        console.log('Uploading data to a sheet');
+
+        await Apify.call('lukaskrivka/google-sheets', spreadsheetInput);
+        console.log('Data uploaded');
+    }
+
+    if (allIssues.length > 0) {
+        const spreadsheetInput = {
+            range: 'All issues',
             spreadsheetId,
             mode: 'replace',
             rawData: allIssues,
             tokensStore: googleOauthStore,
-            columnsOrder: utils.getColumnsOrder(oneSheetPerRepository),
+            columnsOrder: utils.getColumnsOrder(false),
         };
         console.log('Uploading data to a sheet');
         await Apify.call('lukaskrivka/google-sheets', spreadsheetInput);

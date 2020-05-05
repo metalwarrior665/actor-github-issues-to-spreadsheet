@@ -17,10 +17,16 @@
             "description": "Id of the spreadsheet where you want to upload the issues",
             "editor": "textfield"
         },
+        "oneSheetForAllRepositories": {
+            "title": "One sheet for all repositories",
+            "type": "boolean",
+            "description": "If true, each repository will be uploaded to a signle sheet named All issues. Can be used in combination with oneSheetPerRepository.",
+            "default": true
+        },
         "oneSheetPerRepository": {
             "title": "One sheet per one repository",
             "type": "boolean",
-            "description": "If true, each repository will be uploaded to a sheet with the same name as the repository. YOU NEED TO HAVE THE SHEETS ALREADY CREATED!!!",
+            "description": "If true, each repository will be uploaded to a sheet with the same name as the repository. Can be used in combination with oneSheetForAllRepositories",
             "default": false
         },
         "googleOauthStore": {
