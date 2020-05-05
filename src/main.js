@@ -1,6 +1,7 @@
 const Apify = require('apify');
 
 const githubCall = require('./github-call');
+const utils = require('./utils');
 
 Apify.main(async () => {
     const input = await Apify.getInput();
@@ -49,9 +50,7 @@ Apify.main(async () => {
                 rawData: issues,
                 tokensStore: googleOauthStore,
                 range: repository,
-                columnsOrder: oneSheetPerRepository
-                    ? ['title', 'label1', 'label2', 'author', 'createdAt', 'updatedAt', 'comments', 'url']
-                    : ['repository', 'title', 'label1', 'label2', 'author', 'createdAt', 'updatedAt', 'comments', 'url'],
+                columnsOrder: utils.getColumnsOrder(oneSheetPerRepository),
             };
             console.log('Uploading data to a sheet');
 
@@ -64,6 +63,7 @@ Apify.main(async () => {
             mode: 'replace',
             rawData: allIssues,
             tokensStore: googleOauthStore,
+            columnsOrder: utils.getColumnsOrder(oneSheetPerRepository),
         };
         console.log('Uploading data to a sheet');
         await Apify.call('lukaskrivka/google-sheets', spreadsheetInput);
