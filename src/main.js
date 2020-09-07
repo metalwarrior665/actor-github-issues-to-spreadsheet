@@ -27,7 +27,7 @@ Apify.main(async () => {
             throw new Error(`Repository ${repository} has wrong format! It needs to be "username/repository"`);
         }
         const data = await githubCall(repository);
-        if (data.length === 0) {
+        if (!data || data.length === 0) {
             console.warn(`Repository ${repository} did not return any open issues. Skipping...`);
             continue;
         }

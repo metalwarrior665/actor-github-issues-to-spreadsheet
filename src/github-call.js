@@ -17,6 +17,8 @@ const githubCall = async (repository, retries = 0) => {
     if (statusCode >= 500 || statusCode === 429) {
         console.warn(`Got ${statusCode} response for ${url}, retry n. ${retries}, retrying in ${2 ** (retries)} seconds`);
         await githubCall(repository, retries + 1);
+    } else if (statusCode === 404) {
+        console.warn(`Got 404 for ${repository}, skipping`);
     } else {
         throw new Error(`Got ${statusCode} response. Something went really wrong! Please contact the author of this actor.`);
     }
