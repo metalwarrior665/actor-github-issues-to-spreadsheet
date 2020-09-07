@@ -14,11 +14,15 @@ Apify.main(async () => {
         googleOauthStore,
         oneSheetForAllRepositories = true,
         oneSheetPerRepository = false,
+        proxyConfiguration = { useApifyProxy: false },
     } = input;
 
     if (!oneSheetForAllRepositories && !oneSheetPerRepository) {
         throw new Error('WRONG INPUT! You need to pick at least one of oneSheetForAllRepositories and oneSheetPerRepository or both');
     }
+
+    const proxyConfig = await Apify.createProxyConfiguration(proxyConfiguration);
+    const proxyUrl = proxyConfig ? proxyConfig.newUrl() : null;
 
     const issuesPerRepository = [];
     const allIssues = [];
@@ -26,7 +30,7 @@ Apify.main(async () => {
         if (!repository.split('/').length === 2) {
             throw new Error(`Repository ${repository} has wrong format! It needs to be "username/repository"`);
         }
-        const data = await githubCall(repository);
+        const data = await githubCall(repository, proxyUrl);
         if (!data || data.length === 0) {
             console.warn(`Repository ${repository} did not return any open issues. Skipping...`);
             continue;

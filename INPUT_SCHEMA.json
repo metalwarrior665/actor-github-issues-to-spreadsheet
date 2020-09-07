@@ -29,6 +29,12 @@
             "description": "If true, each repository will be uploaded to a sheet with the same name as the repository. Can be used in combination with oneSheetForAllRepositories",
             "default": false
         },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "description": "proxy",
+            "editor": "proxy"
+        },
         "googleOauthStore": {
             "title": "Google OAuth tokens store",
             "type": "string",
