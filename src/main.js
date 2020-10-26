@@ -27,7 +27,7 @@ Apify.main(async () => {
     const issuesPerRepository = [];
     const allIssues = [];
     for (const repository of repositories) {
-        if (!repository.split('/').length === 2) {
+        if (repository.split('/').length !== 2) {
             throw new Error(`Repository ${repository} has wrong format! It needs to be "username/repository"`);
         }
         const data = await githubCall(repository, proxyUrl);
